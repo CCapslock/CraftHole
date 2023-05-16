@@ -7,7 +7,11 @@ public class MainGameController : MonoBehaviour
 	public SingleLevel[] Levels;
 
 	private UIController _uiController;
-	private EnemyController _enemyController;
+	private PlayerMovementController _payerMovementController;
+	private BuildController _buildController;
+	private CameraController _cameraController;
+	private HoleController _holeController;
+	private TimerController _timerController;
 
 	private string _currentLevel = "CurrentlevelFinal";
 	private string _absoluteLevel = "LevelsCompleted";
@@ -16,15 +20,24 @@ public class MainGameController : MonoBehaviour
 
 	private void Awake()
 	{
-		_enemyController = GetComponent<EnemyController>();
 	}
 	private void Start()
 	{
+		Application.targetFrameRate = 60;
 		_uiController = GetComponent<UIController>();
+		_payerMovementController = GetComponent<PlayerMovementController>();
+		_buildController = GetComponent<BuildController>();
+		_cameraController = GetComponent<CameraController>();
+		_holeController = GetComponent<HoleController>();
+		_timerController = GetComponent<TimerController>();
+		_payerMovementController.onFirstInputTaken += StartCollectingPart;
 		_uiController.SetLevelNumber(PlayerPrefs.GetInt(_absoluteLevel));
 		_uiController.ShowStartUI();
-		_enemyController.OnEnemyComplete += FinishLevel;
 		BuildLevel();
+		_holeController.SetMaxAmountOfBlocks(Levels[PlayerPrefs.GetInt(_currentLevel)].GetComponentsInChildren<SingleBlock>().Length);
+		_holeController.onCollectingComplete += StartBuildingPart;
+		_timerController.onTimeEnd += StartBuildingPart;
+		_buildController.onBuildingComplete += FinishLevel;
 	}
 	private void Update()
 	{
@@ -36,30 +49,41 @@ public class MainGameController : MonoBehaviour
 	[Button]
 	public void StartCollectingPart()
 	{
-		_gameStarted = true;
+		_gameStarted = true; 
+		_timerController.StartTimer();
 		_uiController.ShowCollectUI();
+		_uiController.EnablePlayButton(false);
 	}
 	[Button]
-	public void StartFightingPart()
+	public void StartBuildingPart()
 	{
+		_cameraController.StartChangeCameraRotation(_buildController.GetCameraGoalTransform());
 		_uiController.ShowFightUI();
+		_payerMovementController.StartMoveToBuildPosition();
+		_buildController.StartBuilding(_holeController.GetCollectedBlocks(), Levels[PlayerPrefs.GetInt(_currentLevel)].LevelFigure);
 	}
-	public void FinishLevel(bool IsEnemyDefeated)
+	public void FinishLevel(bool isFullyBuild)
+	{
+		//_uiController.ShowResultUI();
+		//Invoke(nameof(RestartScene), 1f);
+		Invoke(nameof(TempLevelFinish), 3f);
+	}
+	private void TempLevelFinish()
 	{
 		_uiController.ShowResultUI();
+		Invoke(nameof(RestartScene), 1f);
 	}
 	private void BuildLevel()
 	{
 		for (int i = 0; i < Levels.Length; i++)
 		{
-			Levels[i].LevelObject.SetActive(false);
+			Levels[i].gameObject.SetActive(false);
 		}
 		if (PlayerPrefs.GetInt(_currentLevel) >= Levels.Length)
 		{
 			PlayerPrefs.SetInt(_currentLevel, 0);
 		}
-		Levels[PlayerPrefs.GetInt(_currentLevel)].LevelObject.SetActive(true);
-		_enemyController.SetHealth(Levels[PlayerPrefs.GetInt(_currentLevel)].EnemyHealth);
+		Levels[PlayerPrefs.GetInt(_currentLevel)].gameObject.SetActive(true);
 	}
 	public void LevelLose()
 	{

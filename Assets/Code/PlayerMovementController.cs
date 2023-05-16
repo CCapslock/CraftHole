@@ -1,18 +1,52 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Collections.Generic;
 
 public class PlayerMovementController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+	[SerializeField] private Transform _playerTransform;
+	[SerializeField] private Transform _buildTransform;
+	[SerializeField] private Joystick _input;
+	[SerializeField] private float _speed = 5f;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	private Vector3 _movement;
+	private float _acceleration = 0.06f;
+	private float _currentAcceleration;
+	private bool _isFirstInputTaken;
+	private bool _needToMoveToBuildPosition;
+
+	public event Action onFirstInputTaken;
+
+	void FixedUpdate()
+	{
+		if (!_isFirstInputTaken && _input.Direction != Vector2.zero)
+		{
+			_isFirstInputTaken = true;
+			onFirstInputTaken?.Invoke();
+		}
+		if (_needToMoveToBuildPosition)
+		{
+			MoveToBuildPosition();
+		}
+		else
+		{
+			Move(_input.Direction);
+		}
+	}
+	public void StartMoveToBuildPosition()
+	{
+		_needToMoveToBuildPosition = true;
+	}
+	public void Move(Vector3 movementDirection)
+	{
+		if (movementDirection == Vector3.zero)
+			return;
+		movementDirection.z = movementDirection.y;
+		movementDirection.y = 0f;
+		_playerTransform.position = (_playerTransform.position + movementDirection * (_speed * Time.deltaTime));
+	}
+	public void MoveToBuildPosition()
+	{
+		_playerTransform.position = Vector3.MoveTowards(_playerTransform.position, _buildTransform.position, _speed);
+	}
 }

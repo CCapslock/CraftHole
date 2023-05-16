@@ -1,9 +1,15 @@
-using System;
 using UnityEngine;
+using NaughtyAttributes;
 
-[Serializable]
-public class SingleLevel 
+public class SingleLevel : MonoBehaviour
 {
-    public GameObject LevelObject;
-    public float EnemyHealth;
+	public BuildFigureScriptableObject LevelFigure;
+
+	public int BlocksAmount;
+
+	[Button]
+	public void GetBlocksAmount()
+	{
+		BlocksAmount = GetComponentsInChildren<SingleBlock>().Length;
+	}
 }

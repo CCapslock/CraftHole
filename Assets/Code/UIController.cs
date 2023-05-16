@@ -7,6 +7,9 @@ public class UIController : MonoBehaviour
 {
 
 	[Foldout("StartUI")]
+	[SerializeField] Button _startGameButton;
+
+	[Foldout("StartUI")]
 	[SerializeField] Button _timerUpgradeButton;
 	[Foldout("StartUI")]
 	[SerializeField] Image _timerUpgradeImage;
@@ -53,12 +56,19 @@ public class UIController : MonoBehaviour
 	[SerializeField] private Animator _resultUIAnimator;
 	[SerializeField] private Animator _moneyUIAnimator;
 
+	private MainGameController _mainGameController;
+
 	private string _hide = "Hide";
 	private string _show = "Show";
 
 	private void Awake()
 	{
-
+		_mainGameController = GetComponent<MainGameController>();
+		_startGameButton.onClick.AddListener(_mainGameController.StartCollectingPart);
+	}
+	public void EnablePlayButton(bool state) 
+	{
+		_startGameButton.gameObject.SetActive(state);
 	}
 	public void SetLevelNumber(int number)
 	{
