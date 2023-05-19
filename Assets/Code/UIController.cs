@@ -50,6 +50,9 @@ public class UIController : MonoBehaviour
 	[Foldout("WinUI")]
 	[SerializeField] TMP_Text _winLevelNumber;
 
+	[SerializeField] private TMP_Text _timerText;
+	[SerializeField] private Slider _timerSlider;
+
 	[SerializeField] private Animator _startUIAnimator;
 	[SerializeField] private Animator _collectUIAnimator;
 	[SerializeField] private Animator _fightUIAnimator;
@@ -57,6 +60,7 @@ public class UIController : MonoBehaviour
 	[SerializeField] private Animator _moneyUIAnimator;
 
 	private MainGameController _mainGameController;
+	private int _minutes;
 
 	private string _hide = "Hide";
 	private string _show = "Show";
@@ -66,7 +70,7 @@ public class UIController : MonoBehaviour
 		_mainGameController = GetComponent<MainGameController>();
 		_startGameButton.onClick.AddListener(_mainGameController.StartCollectingPart);
 	}
-	public void EnablePlayButton(bool state) 
+	public void EnablePlayButton(bool state)
 	{
 		_startGameButton.gameObject.SetActive(state);
 	}
@@ -97,5 +101,11 @@ public class UIController : MonoBehaviour
 	{
 		_resultUIAnimator.SetTrigger(_show);
 		_fightUIAnimator.SetTrigger(_hide);
+	}
+	public void SetTimerAmount(int timerAmount, float maxAmount, float currentAmount)
+	{
+		_timerSlider.value = currentAmount / maxAmount;
+		_minutes = timerAmount / 60;
+		_timerText.text = _minutes.ToString() + ":" + (timerAmount - _minutes * 60).ToString();
 	}
 }

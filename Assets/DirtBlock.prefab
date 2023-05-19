@@ -133,3 +133,5 @@ MonoBehaviour:
   _rigidbody: {fileID: 1133727105}
   _renderer: {fileID: 443535777895863829}
   _cloneMaterial: {fileID: 0}
+  _neighbours: []
+  _blockSize: 0.1

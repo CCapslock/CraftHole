@@ -59,7 +59,7 @@ public class MainGameController : MonoBehaviour
 	{
 		_cameraController.StartChangeCameraRotation(_buildController.GetCameraGoalTransform());
 		_uiController.ShowFightUI();
-		_payerMovementController.StartMoveToBuildPosition();
+		_payerMovementController.StartBuildingMovement();
 		_buildController.StartBuilding(_holeController.GetCollectedBlocks(), Levels[PlayerPrefs.GetInt(_currentLevel)].LevelFigure);
 	}
 	public void FinishLevel(bool isFullyBuild)

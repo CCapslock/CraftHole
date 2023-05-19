@@ -5,7 +5,7 @@ using UnityEngine;
 public class SingleCalculatedPosition 
 {
     public bool IsHasBlock = false;
-    public Color BlockColor = Color.gray;
+    public Material BlockMaterial ;
 
     public SingleCalculatedPosition()
 	{

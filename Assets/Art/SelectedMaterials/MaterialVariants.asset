@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2de193b485c6ece4d895899d90bf3ef9, type: 3}
+  m_Name: MaterialVariants
+  m_EditorClassIdentifier: 
+  ColorVariants:
+  - VariantMaterial: {fileID: 2100000, guid: d1417bfa890812048b87dfc00efb4972, type: 2}
+    VariantMainColor: 0
+    ThisColor: {r: 1, g: 1, b: 1, a: 1}
+  - VariantMaterial: {fileID: 2100000, guid: 8db94b9e467c1b6479b963efb6a18bfd, type: 2}
+    VariantMainColor: 1
+    ThisColor: {r: 0, g: 0, b: 0, a: 1}
+  - VariantMaterial: {fileID: 2100000, guid: 692d16cc2b0c7d94fb70577acdfef2e3, type: 2}
+    VariantMainColor: 2
+    ThisColor: {r: 1, g: 1, b: 0, a: 1}
+  - VariantMaterial: {fileID: 2100000, guid: 51df8d229dbfe0a4683b7ed6aa0ff0d2, type: 2}
+    VariantMainColor: 3
+    ThisColor: {r: 1, g: 0, b: 0, a: 1}
+  - VariantMaterial: {fileID: 2100000, guid: 54bf40f0c26939a4eacbe2d399d9316b, type: 2}
+    VariantMainColor: 4
+    ThisColor: {r: 0, g: 0.06818817, b: 1, a: 1}
+  - VariantMaterial: {fileID: 2100000, guid: 1d7de51ea1b0f534bae4fd22fa2a93b3, type: 2}
+    VariantMainColor: 5
+    ThisColor: {r: 0.026666878, g: 1, b: 0, a: 1}
+  - VariantMaterial: {fileID: 2100000, guid: 3bacd9318f498dc438a75d4b21b79765, type: 2}
+    VariantMainColor: 5
+    ThisColor: {r: 0.8962264, g: 0.8962264, b: 0, a: 1}
+  - VariantMaterial: {fileID: 2100000, guid: 62ede3fb906adb148a736dc03e68f675, type: 2}
+    VariantMainColor: 5
+    ThisColor: {r: 1, g: 0.8279877, b: 0, a: 1}
+  - VariantMaterial: {fileID: 2100000, guid: f89ab8b4f2ba3cd4db4a022f52eaba39, type: 2}
+    VariantMainColor: 5
+    ThisColor: {r: 1, g: 0.6604272, b: 0, a: 1}
+  - VariantMaterial: {fileID: 2100000, guid: c57c2adc673a1384fbe8b2cb7ff53eb8, type: 2}
+    VariantMainColor: 5
+    ThisColor: {r: 0.75577563, g: 0.8980392, b: 0, a: 1}
+  - VariantMaterial: {fileID: 2100000, guid: 8b8c123a1974bc14ba687d0bea6a92a3, type: 2}
+    VariantMainColor: 5
+    ThisColor: {r: 0.8980392, g: 0.44520098, b: 0, a: 1}
+  - VariantMaterial: {fileID: 2100000, guid: 75a36cef0297dcb4a81900ec16b139d8, type: 2}
+    VariantMainColor: 5
+    ThisColor: {r: 0.8980392, g: 0.52385616, b: 0, a: 1}
+  - VariantMaterial: {fileID: 2100000, guid: 3f82b04a6ba3a1e42865571b78e92fc1, type: 2}
+    VariantMainColor: 5
+    ThisColor: {r: 0.85, g: 0.56790394, b: 0, a: 1}
+  - VariantMaterial: {fileID: 2100000, guid: 462e16fd4bd7bc54e81d6cb33fc015a0, type: 2}
+    VariantMainColor: 5
+    ThisColor: {r: 0.09999997, g: 0.09999997, b: 0.09999997, a: 1}
+  - VariantMaterial: {fileID: 2100000, guid: 2725798cf578bb247a872e10bbd39fc2, type: 2}
+    VariantMainColor: 5
+    ThisColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+  - VariantMaterial: {fileID: 2100000, guid: 64105d8e3f434e540a39bbc7edb09964, type: 2}
+    VariantMainColor: 5
+    ThisColor: {r: 0.29999998, g: 0.29999998, b: 0.29999998, a: 1}
+  - VariantMaterial: {fileID: 2100000, guid: e6eb7ddb124153243bebd68a0087ba0f, type: 2}
+    VariantMainColor: 5
+    ThisColor: {r: 0.39999998, g: 0.39999998, b: 0.39999998, a: 1}
+  _color: {r: 0.2924528, g: 0.23865253, b: 0.23865253, a: 0}
+  _recivedColor: {r: 0, g: 0, b: 0, a: 0}

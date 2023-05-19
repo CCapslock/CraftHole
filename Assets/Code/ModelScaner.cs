@@ -17,6 +17,7 @@ public class ModelScaner : MonoBehaviour
 	public Transform BlocksParent;
 
 	public BuildFigureScriptableObject Figure;
+	public MaterialVariantScriptableObject MaterialVariants;
 
 	private List<SingleBlockInFigure> _blockPositions = new List<SingleBlockInFigure>();
 	private SingleCalculatedPosition[,,] _calculatedPositions;
@@ -56,7 +57,7 @@ public class ModelScaner : MonoBehaviour
 			{
 				if (Physics.Raycast(transform.position + new Vector3(_cubeSize * i, _cubeSize * j, 0), Vector3.forward, out hit, Mathf.Infinity))
 				{
-					_blockPositions.Add(new SingleBlockInFigure(hit.point, GetColor(hit)));
+					_blockPositions.Add(new SingleBlockInFigure(hit.point, MaterialVariants.GetClosestColorVariant(GetColor(hit)).VariantMaterial));
 				}
 			}
 		}
@@ -66,7 +67,7 @@ public class ModelScaner : MonoBehaviour
 			{
 				if (Physics.Raycast(transform.position + Vector3.forward * _modelSize + new Vector3(_cubeSize * i, _cubeSize * j, 0), Vector3.back, out hit, Mathf.Infinity))
 				{
-					_blockPositions.Add(new SingleBlockInFigure(hit.point, GetColor(hit)));
+					_blockPositions.Add(new SingleBlockInFigure(hit.point, MaterialVariants.GetClosestColorVariant(GetColor(hit)).VariantMaterial));
 				}
 			}
 		}
@@ -76,7 +77,7 @@ public class ModelScaner : MonoBehaviour
 			{
 				if (Physics.Raycast(transform.position + Vector3.right * _modelSize + new Vector3(0, _cubeSize * j, _cubeSize * i), Vector3.left, out hit, Mathf.Infinity))
 				{
-					_blockPositions.Add(new SingleBlockInFigure(hit.point, GetColor(hit)));
+					_blockPositions.Add(new SingleBlockInFigure(hit.point, MaterialVariants.GetClosestColorVariant(GetColor(hit)).VariantMaterial));
 				}
 			}
 		}
@@ -86,7 +87,7 @@ public class ModelScaner : MonoBehaviour
 			{
 				if (Physics.Raycast(transform.position + new Vector3(0, _cubeSize * j, _cubeSize * i), Vector3.right, out hit, Mathf.Infinity))
 				{
-					_blockPositions.Add(new SingleBlockInFigure(hit.point, GetColor(hit)));
+					_blockPositions.Add(new SingleBlockInFigure(hit.point, MaterialVariants.GetClosestColorVariant(GetColor(hit)).VariantMaterial));
 				}
 			}
 		}
@@ -96,7 +97,7 @@ public class ModelScaner : MonoBehaviour
 			{
 				if (Physics.Raycast(transform.position + Vector3.up * _modelSize + new Vector3(_cubeSize * j, 0, _cubeSize * i), Vector3.down, out hit, Mathf.Infinity))
 				{
-					_blockPositions.Add(new SingleBlockInFigure(hit.point, GetColor(hit)));
+					_blockPositions.Add(new SingleBlockInFigure(hit.point, MaterialVariants.GetClosestColorVariant(GetColor(hit)).VariantMaterial));
 				}
 			}
 		}
@@ -106,7 +107,7 @@ public class ModelScaner : MonoBehaviour
 			{
 				if (Physics.Raycast(transform.position + new Vector3(_cubeSize * j, 0, _cubeSize * i), Vector3.up, out hit, Mathf.Infinity))
 				{
-					_blockPositions.Add(new SingleBlockInFigure(hit.point, GetColor(hit)));
+					_blockPositions.Add(new SingleBlockInFigure(hit.point, MaterialVariants.GetClosestColorVariant(GetColor(hit)).VariantMaterial));
 				}
 			}
 		}
@@ -123,7 +124,7 @@ public class ModelScaner : MonoBehaviour
 				{
 					if (_calculatedPositions[i, j, k].IsHasBlock == true)
 					{
-						Instantiate(_blockModel, GetPointPosition(i, j, k) + transform.position, Quaternion.identity, BlocksParent).SetBlockColor(_calculatedPositions[i, j, k].BlockColor);
+						Instantiate(_blockModel, GetPointPosition(i, j, k) + transform.position, Quaternion.identity, BlocksParent).SetBlockColor(_calculatedPositions[i, j, k].BlockMaterial);
 						//tempTransform = PrefabUtility.InstantiatePrefab(_blockModel) as MonoBehaviour;
 						//tempTransform.transform.parent = transform;
 						//tempTransform.transform.localPosition = GetPointPosition(i, j, k) /*+ transform.position*/;
@@ -132,6 +133,7 @@ public class ModelScaner : MonoBehaviour
 			}
 		}
 	}
+
 	[Button]
 	private void SetFigurePositions()
 	{
@@ -140,7 +142,7 @@ public class ModelScaner : MonoBehaviour
 		Vector3 Diffrence = new Vector3(_modelSize / 2f * -1f, 0, _modelSize / 2f * -1f);
 		for (int i = 0; i < temp.Length; i++)
 		{
-			positions[i] = new SingleBlockInFigure(temp[i].transform.localPosition + Diffrence, temp[i].BlockColor);
+			positions[i] = new SingleBlockInFigure(temp[i].transform.localPosition + Diffrence, temp[i].BlockMaterial);
 		}
 		Figure.FigureBlocks = SortArray(positions);
 #if UNITY_EDITOR
@@ -156,7 +158,7 @@ public class ModelScaner : MonoBehaviour
 		Vector3 Diffrence = new Vector3(_modelSize / 2f * -1f, 0, _modelSize / 2f * -1f);
 		for (int i = 0; i < temp.Length; i++)
 		{
-			positions[i] = new SingleBlockInFigure(temp[i].transform.localPosition + Diffrence, temp[i].BlockColor);
+			positions[i] = new SingleBlockInFigure(temp[i].transform.localPosition + Diffrence, temp[i].BlockMaterial);
 		}
 		GameObject Prefab = new GameObject("ComplexBlockPrefab");
 		SingleBlock tempBlock;
@@ -164,7 +166,7 @@ public class ModelScaner : MonoBehaviour
 		{
 			tempBlock = Instantiate(_blockModel, Prefab.transform);
 			tempBlock.transform.localPosition = positions[i].BlockPosition;
-			tempBlock.SetBlockColor(positions[i].BlockColor);
+			tempBlock.SetBlockColor(positions[i].BlockMaterial);
 		}
 		Prefab.AddComponent<SingleComplexBlock>().CombineBlocks();
 	}
@@ -199,7 +201,7 @@ public class ModelScaner : MonoBehaviour
 		}
 		Debug.Log("distance = " + distance);
 		_calculatedPositions[iNum, jNum, kNum].IsHasBlock = true;
-		_calculatedPositions[iNum, jNum, kNum].BlockColor = pointPosition.BlockColor;
+		_calculatedPositions[iNum, jNum, kNum].BlockMaterial = pointPosition.BlockMaterial;
 	}
 	private Vector3 GetPointPosition(int i, int j, int k)
 	{

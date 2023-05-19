@@ -4,11 +4,11 @@ using System;
 public class SingleBlockInFigure
 {
 	public Vector3 BlockPosition;
-	public Color BlockColor;
+	public Material BlockMaterial;
 
-	public SingleBlockInFigure(Vector3 pos, Color col)
+	public SingleBlockInFigure(Vector3 pos, Material mat)
 	{
 		BlockPosition = pos;
-		BlockColor = col;
+		BlockMaterial = mat;
 	}
 }

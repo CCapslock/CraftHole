@@ -1,20 +1,24 @@
 using NaughtyAttributes;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class SingleBlock : MonoBehaviour
 {
-	public Color BlockColor;
+	public Material BlockMaterial;
 
 	[Layer] [SerializeField] private int _blockLayer;
 	[Layer] [SerializeField] private int _defaultLayer;
 
 	[SerializeField] private Rigidbody _rigidbody;
 	[SerializeField] private Renderer _renderer;
-	[SerializeField] private Material _cloneMaterial;
+	[SerializeField] private List<SingleBlock> _neighbours;
+	private BoxCollider _blockCollider;
 	private Vector3 _goalPosition;
+	[SerializeField] private float _blockSize;
 
 	private void Start()
 	{
+		_blockCollider = GetComponent<BoxCollider>();
 	}
 	public void SeparateBlock()
 	{
@@ -48,16 +52,36 @@ public class SingleBlock : MonoBehaviour
 	{
 		return transform.position == _goalPosition;
 	}
-	public void SetBlockColor(Color color)
+	public void SetBlockColor(Material mat)
 	{
-		BlockColor = color;
+		BlockMaterial = mat;
 		SetCorrectColor();
 	}
 	[Button]
 	public void SetCorrectColor()
 	{
-		_cloneMaterial = new Material(_renderer.sharedMaterials[0]);
-		_cloneMaterial.SetColor("_BaseColor", BlockColor);
-		_renderer.sharedMaterial = _cloneMaterial;
+		_renderer.sharedMaterial = BlockMaterial;
+	}
+	[Button]
+	public void GetNeighbours()
+	{
+		_neighbours = new List<SingleBlock>();
+		_blockCollider = GetComponent<BoxCollider>();
+		_blockCollider.enabled = false;
+
+		Vector3[] directions = { Vector3.up, Vector3.down, Vector3.left, Vector3.right, Vector3.forward, Vector3.back };
+
+		RaycastHit hit;
+		SingleBlock temp;
+		// Does the ray intersect any objects excluding the player layer
+		for (int i = 0; i < directions.Length; i++)
+		{
+			if (Physics.Raycast(transform.position, directions[i], out hit, _blockSize))
+			{
+				if (hit.collider.TryGetComponent(out temp))
+					_neighbours.Add(temp);
+			}
+		}
+		_blockCollider.enabled = true;
 	}
 }

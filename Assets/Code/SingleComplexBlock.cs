@@ -8,6 +8,7 @@ public class SingleComplexBlock : MonoBehaviour
 	[SerializeField] private int _requiredContactBlocks;
 	[SerializeField] private int _blocksInHoleContact;
 	private int _currentLayer;
+	private string _partName = "ComplexPart";
 
 	private void Start()
 	{
@@ -61,5 +62,14 @@ public class SingleComplexBlock : MonoBehaviour
 		_blocksList.Remove(block);
 		_requiredContactBlocks--;
 		block.SeparateBlock();
+	}
+
+	public void MakeParts()
+	{
+		for (int i = 0; i < _blocksList.Count; i++)
+		{
+			_blocksList[i].transform.parent = transform;
+		}
+
 	}
 }
