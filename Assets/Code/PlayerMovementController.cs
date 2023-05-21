@@ -46,11 +46,11 @@ public class PlayerMovementController : MonoBehaviour
 			return;
 		movementDirection.z = movementDirection.y;
 		movementDirection.y = 0f;
-		_playerTransform.position = (_playerTransform.position + movementDirection * (_speed * Time.deltaTime));
+		_playerTransform.position = (_playerTransform.position + movementDirection * (_speed* _playerTransform.localScale.x * Time.deltaTime));
 	}
 	public void MoveToBuildPosition()
 	{
-		_playerTransform.position = Vector3.MoveTowards(_playerTransform.position, _buildTransform.position, _speed);
+		_playerTransform.position = Vector3.MoveTowards(_playerTransform.position, _buildTransform.position, _speed*_playerTransform.localScale.x);
 	}
 	private void MoveAroundBuilding()
 	{

@@ -9,7 +9,7 @@ public class ModelScaner : MonoBehaviour
 	public float _cubeSize;
 	[OnValueChanged(nameof(SetVizualDots))]
 	public float _modelSize;
-	public SingleBlock[] temp;
+	public SingleBlock[] _blocks;
 
 	public Transform XPos;
 	public Transform YPos;
@@ -33,10 +33,10 @@ public class ModelScaner : MonoBehaviour
 	public void ScanModel()
 	{
 		_blockPositions = new List<SingleBlockInFigure>();
-		temp = GetComponentsInChildren<SingleBlock>();
-		for (int i = 0; i < temp.Length; i++)
+		_blocks = GetComponentsInChildren<SingleBlock>();
+		for (int i = 0; i < _blocks.Length; i++)
 		{
-			DestroyImmediate(temp[i].gameObject);
+			DestroyImmediate(_blocks[i].gameObject);
 		}
 		_calculatedPositions = new SingleCalculatedPosition[(int)(_modelSize / _cubeSize), (int)(_modelSize / _cubeSize), (int)(_modelSize / _cubeSize)];
 		for (int i = 0; i < _calculatedPositions.GetLength(0); i++)
@@ -124,7 +124,7 @@ public class ModelScaner : MonoBehaviour
 				{
 					if (_calculatedPositions[i, j, k].IsHasBlock == true)
 					{
-						Instantiate(_blockModel, GetPointPosition(i, j, k) + transform.position, Quaternion.identity, BlocksParent).SetBlockColor(_calculatedPositions[i, j, k].BlockMaterial);
+						Instantiate(_blockModel, GetPointPosition(i, j, k) + transform.position, Quaternion.identity, BlocksParent).SetBlockMaterial(_calculatedPositions[i, j, k].BlockMaterial);
 						//tempTransform = PrefabUtility.InstantiatePrefab(_blockModel) as MonoBehaviour;
 						//tempTransform.transform.parent = transform;
 						//tempTransform.transform.localPosition = GetPointPosition(i, j, k) /*+ transform.position*/;
@@ -137,12 +137,12 @@ public class ModelScaner : MonoBehaviour
 	[Button]
 	private void SetFigurePositions()
 	{
-		temp = GetComponentsInChildren<SingleBlock>();
-		SingleBlockInFigure[] positions = new SingleBlockInFigure[temp.Length];
+		_blocks = GetComponentsInChildren<SingleBlock>();
+		SingleBlockInFigure[] positions = new SingleBlockInFigure[_blocks.Length];
 		Vector3 Diffrence = new Vector3(_modelSize / 2f * -1f, 0, _modelSize / 2f * -1f);
-		for (int i = 0; i < temp.Length; i++)
+		for (int i = 0; i < _blocks.Length; i++)
 		{
-			positions[i] = new SingleBlockInFigure(temp[i].transform.localPosition + Diffrence, temp[i].BlockMaterial);
+			positions[i] = new SingleBlockInFigure(_blocks[i].transform.localPosition + Diffrence, _blocks[i].BlockMaterial);
 		}
 		Figure.FigureBlocks = SortArray(positions);
 #if UNITY_EDITOR
@@ -150,15 +150,61 @@ public class ModelScaner : MonoBehaviour
 		EditorUtility.SetDirty(Figure);
 #endif
 	}
+
+	[Button]
+	private void FixCurrentBlocksPositions()
+	{
+		_blocks = GetComponentsInChildren<SingleBlock>();
+		Vector3 fixedPos = new Vector3();
+		for (int i = 0; i < _blocks.Length; i++)
+		{
+			fixedPos = new Vector3();
+			if (Mathf.Abs(_blocks[i].transform.localPosition.x % _cubeSize) > _cubeSize / 2f)
+			{
+				if (_blocks[i].transform.localPosition.x > 0)
+					fixedPos.x = _blocks[i].transform.localPosition.x - (_blocks[i].transform.localPosition.x % _cubeSize) + _cubeSize;
+				else
+					fixedPos.x = _blocks[i].transform.localPosition.x - (_blocks[i].transform.localPosition.x % _cubeSize) - _cubeSize;
+			}
+			else
+			{
+				fixedPos.x = _blocks[i].transform.localPosition.x - (_blocks[i].transform.localPosition.x % _cubeSize);
+			}
+			if (Mathf.Abs(_blocks[i].transform.localPosition.y % _cubeSize) > _cubeSize / 2f)
+			{
+				if (_blocks[i].transform.localPosition.y > 0)
+					fixedPos.y = _blocks[i].transform.localPosition.y - (_blocks[i].transform.localPosition.y % _cubeSize) + _cubeSize;
+				else
+					fixedPos.y = _blocks[i].transform.localPosition.y - (_blocks[i].transform.localPosition.y % _cubeSize) - _cubeSize;
+			}
+			else
+			{
+				fixedPos.y = _blocks[i].transform.localPosition.y - (_blocks[i].transform.localPosition.y % _cubeSize);
+			}
+			if (Mathf.Abs(_blocks[i].transform.localPosition.z % _cubeSize) > _cubeSize / 2f)
+			{
+				if (_blocks[i].transform.localPosition.z > 0)
+					fixedPos.z = _blocks[i].transform.localPosition.z - (_blocks[i].transform.localPosition.z % _cubeSize) + _cubeSize;
+				else
+					fixedPos.z = _blocks[i].transform.localPosition.z - (_blocks[i].transform.localPosition.z % _cubeSize) - _cubeSize;
+			}
+			else
+			{
+				fixedPos.z = _blocks[i].transform.localPosition.z - (_blocks[i].transform.localPosition.z % _cubeSize);
+			}
+			_blocks[i].transform.localPosition = fixedPos;
+		}
+	}
+
 	[Button]
 	private void MakeComplexBlockPrefab()
 	{
-		temp = GetComponentsInChildren<SingleBlock>();
-		SingleBlockInFigure[] positions = new SingleBlockInFigure[temp.Length];
+		_blocks = GetComponentsInChildren<SingleBlock>();
+		SingleBlockInFigure[] positions = new SingleBlockInFigure[_blocks.Length];
 		Vector3 Diffrence = new Vector3(_modelSize / 2f * -1f, 0, _modelSize / 2f * -1f);
-		for (int i = 0; i < temp.Length; i++)
+		for (int i = 0; i < _blocks.Length; i++)
 		{
-			positions[i] = new SingleBlockInFigure(temp[i].transform.localPosition + Diffrence, temp[i].BlockMaterial);
+			positions[i] = new SingleBlockInFigure(_blocks[i].transform.localPosition + Diffrence, _blocks[i].BlockMaterial);
 		}
 		GameObject Prefab = new GameObject("ComplexBlockPrefab");
 		SingleBlock tempBlock;
@@ -166,9 +212,11 @@ public class ModelScaner : MonoBehaviour
 		{
 			tempBlock = Instantiate(_blockModel, Prefab.transform);
 			tempBlock.transform.localPosition = positions[i].BlockPosition;
-			tempBlock.SetBlockColor(positions[i].BlockMaterial);
+			tempBlock.SetBlockMaterial(positions[i].BlockMaterial);
 		}
-		Prefab.AddComponent<SingleComplexBlock>().CombineBlocks();
+		Prefab.tag = TagManager.GetTag(TagType.ComplexBlock);
+		Prefab.AddComponent<Rigidbody>();
+		Prefab.AddComponent<SingleComplexBlock>().CombineBlocks(positions.Length / 3);
 	}
 	private void AddPoint(SingleBlockInFigure pointPosition)
 	{

@@ -60,7 +60,7 @@ public class BuildController : MonoBehaviour
 				temp.transform.position = _playerTransform.position;
 				temp.transform.rotation = Quaternion.identity;
 				temp.StartMovingBlock(_figureTransform.position + _figure.FigureBlocks[_blocksPlaced].BlockPosition);
-				temp.SetBlockColor(_figure.FigureBlocks[_blocksPlaced].BlockMaterial);
+				temp.SetBlockMaterial(_figure.FigureBlocks[_blocksPlaced].BlockMaterial);
 				_blocksPlaced++;
 				_blocksForMovement.Add(temp);
 			}

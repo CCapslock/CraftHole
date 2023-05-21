@@ -18,11 +18,23 @@ public class SingleComplexBlock : MonoBehaviour
 	public void CombineBlocks()
 	{
 		SingleBlock[] blocksArray = GetComponentsInChildren<SingleBlock>();
+		_blocksList = new List<SingleBlock>();
 		for (int i = 0; i < blocksArray.Length; i++)
 		{
 			_blocksList.Add(blocksArray[i]);
 			_blocksList[i].CombineBlock(transform);
 		}
+	}
+	public void CombineBlocks(int contactBlocksAmount)
+	{
+		SingleBlock[] blocksArray = GetComponentsInChildren<SingleBlock>();
+		_blocksList = new List<SingleBlock>();
+		for (int i = 0; i < blocksArray.Length; i++)
+		{
+			_blocksList.Add(blocksArray[i]);
+			_blocksList[i].CombineBlock(transform);
+		}
+		_requiredContactBlocks = contactBlocksAmount;
 	}
 	[Button]
 	public void SeparateBlocks()

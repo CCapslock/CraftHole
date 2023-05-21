@@ -1,10 +1,16 @@
 using NaughtyAttributes;
 using UnityEngine;
 using System.Collections.Generic;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class SingleBlock : MonoBehaviour
 {
 	public Material BlockMaterial;
+
+	// чисто для старого сканера
+	[HideInInspector] public Color BlockColor;
 
 	[Layer] [SerializeField] private int _blockLayer;
 	[Layer] [SerializeField] private int _defaultLayer;
@@ -13,6 +19,7 @@ public class SingleBlock : MonoBehaviour
 	[SerializeField] private Renderer _renderer;
 	[SerializeField] private List<SingleBlock> _neighbours;
 	private BoxCollider _blockCollider;
+	private Material _cloneMaterial;
 	private Vector3 _goalPosition;
 	[SerializeField] private float _blockSize;
 
@@ -52,13 +59,13 @@ public class SingleBlock : MonoBehaviour
 	{
 		return transform.position == _goalPosition;
 	}
-	public void SetBlockColor(Material mat)
+	public void SetBlockMaterial(Material mat)
 	{
 		BlockMaterial = mat;
-		SetCorrectColor();
+		SetCorrectMaterial();
 	}
 	[Button]
-	public void SetCorrectColor()
+	public void SetCorrectMaterial()
 	{
 		_renderer.sharedMaterial = BlockMaterial;
 	}
@@ -84,4 +91,25 @@ public class SingleBlock : MonoBehaviour
 		}
 		_blockCollider.enabled = true;
 	}
+	public void SetBlockColor(Color color)
+	{
+		BlockColor = color;
+		SetCorrectColor();
+	}
+	[Button]
+	public void SetCorrectColor()
+	{
+		_cloneMaterial = new Material(_renderer.sharedMaterials[0]);
+		_cloneMaterial.SetColor("_BaseColor", BlockColor);
+		_renderer.sharedMaterial = _cloneMaterial;
+	}
+#if UNITY_EDITOR
+	[Button]
+	private void CreateMaterialAsset()
+	{
+		Material material = new Material(_cloneMaterial);
+		string[] temp = { "Assets/Art/SelectedMaterials" };
+		AssetDatabase.CreateAsset(material, "Assets/Art/SelectedMaterials/NewSelectedMaterial" + (AssetDatabase.FindAssets("", temp).Length + 1).ToString() + ".mat");
+	}
+#endif
 }
