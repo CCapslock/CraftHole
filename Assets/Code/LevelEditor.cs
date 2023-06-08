@@ -25,13 +25,15 @@ public class LevelEditor : MonoBehaviour
 	[Button]
 	public void ReplaceObjects()
 	{
+#if UNITY_EDITOR
 		for (int i = 0; i < OldObjects.Length; i++)
 		{
-			MonoBehaviour temp =  PrefabUtility.InstantiatePrefab(NewObject) as MonoBehaviour;
+			MonoBehaviour temp = PrefabUtility.InstantiatePrefab(NewObject) as MonoBehaviour;
 			temp.transform.position = OldObjects[i].transform.position;
 			temp.transform.parent = OldObjects[i].transform.parent;
 			DestroyImmediate(OldObjects[i]);
 		}
+#endif
 	}
 	[Button]
 	private void MakeRandomRotations()
