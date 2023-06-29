@@ -2,11 +2,17 @@ using UnityEngine;
 using NaughtyAttributes;
 using System.Collections.Generic;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 public class SingleComplexBlock : MonoBehaviour
 {
 	[SerializeField] private List<SingleBlock> _blocksList = new List<SingleBlock>();
 	[SerializeField] private int _requiredContactBlocks;
 	[SerializeField] private int _blocksInHoleContact;
+	[SerializeField] private MeshRenderer temp;
+	[SerializeField] private MeshFilter temp2;
+	[SerializeField] private SingleBlock _blockPrefab;
 	private int _currentLayer;
 	private string _partName = "ComplexPart";
 
@@ -83,5 +89,23 @@ public class SingleComplexBlock : MonoBehaviour
 			_blocksList[i].transform.parent = transform;
 		}
 
+	}
+	[Button]
+	public void ReplaceSingleBlocksWithPrefab()
+	{
+#if UNITY_EDITOR
+
+		for (int i = _blocksList.Count - 1; i >= 0; i--)
+		{
+			MonoBehaviour gg = PrefabUtility.InstantiatePrefab(_blockPrefab, transform) as MonoBehaviour;
+			gg.transform.position = _blocksList[i].transform.position;
+
+			gg.GetComponent<SingleBlock>().SetBlockMaterial(_blocksList[i].GetMaterialFromRenderer());
+
+			DestroyImmediate(_blocksList[i].gameObject);
+		}
+		CombineBlocks(_requiredContactBlocks);
+
+#endif
 	}
 }

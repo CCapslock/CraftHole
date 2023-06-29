@@ -9,6 +9,7 @@ public static class TagManager
 		_tags = new Dictionary<TagType, string>
 			{
 				{TagType.Block, "Block"},
+				{TagType.Spike, "Spike"},
 				{TagType.ComplexBlock, "ComplexBlock"}
 			};
 	}
