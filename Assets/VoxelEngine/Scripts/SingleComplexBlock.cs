@@ -1,10 +1,10 @@
 using UnityEngine;
 using NaughtyAttributes;
 using System.Collections.Generic;
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+
 public class SingleComplexBlock : MonoBehaviour
 {
 	[SerializeField] private List<SingleBlock> _blocksList = new List<SingleBlock>();
@@ -13,12 +13,32 @@ public class SingleComplexBlock : MonoBehaviour
 	[SerializeField] private MeshRenderer temp;
 	[SerializeField] private MeshFilter temp2;
 	[SerializeField] private SingleBlock _blockPrefab;
-	private int _currentLayer;
 	private string _partName = "ComplexPart";
+	private int _currentLayer;
+	private bool _isStatic = true;
 
 	private void Start()
 	{
 		_currentLayer = gameObject.layer;
+	}
+	public void UnStatic()
+	{
+		if (_isStatic)
+		{
+			_isStatic = false;
+			for (int i = 0; i < _blocksList.Count; i++)
+			{
+				_blocksList[i].UnStatic();
+			}
+		}
+	}
+	[Button]
+	private void MakeCorrectColors()
+	{
+		for (int i = 0; i < _blocksList.Count; i++)
+		{
+			_blocksList[i].MakeCorrectColor();
+		}
 	}
 	[Button]
 	public void CombineBlocks()

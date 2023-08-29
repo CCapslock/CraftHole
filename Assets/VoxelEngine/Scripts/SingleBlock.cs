@@ -8,6 +8,7 @@ using UnityEditor;
 public class SingleBlock : MonoBehaviour
 {
 	public Material BlockMaterial;
+	public GameObject StaticObject;
 
 	[HideInInspector] public Color BlockColor;
 
@@ -33,7 +34,19 @@ public class SingleBlock : MonoBehaviour
 		if (!transform.parent.TryGetComponent(out _parentComplexBlock))
 		{
 			_isSeparated = true;
+			UnStatic();
 		}
+	}
+	[Button]
+	public void MakeCorrectColor()
+	{
+		BlockMaterial = _renderer.sharedMaterial;
+		StaticObject.GetComponent<Renderer>().sharedMaterial = BlockMaterial;
+	}
+	public void UnStatic()
+	{
+		_renderer.enabled = true;
+		StaticObject.SetActive(false);
 	}
 	public Material GetMaterialFromRenderer()
 	{
